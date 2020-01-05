@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
 import { Container } from 'reactstrap';
 
+
 import {
   AppAside,
   AppFooter,
@@ -19,12 +20,14 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import Teams from '../../teamtasker/teams';
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 class DefaultLayout extends Component {
+
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 

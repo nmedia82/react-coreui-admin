@@ -10,6 +10,18 @@ export default {
       },
     },
     {
+      name: 'Team Tasker',
+      url: '/teamtasker',
+      icon: 'icon-puzzle',
+      children: [
+        {
+          name: 'All Teams',
+          url: '/teamtasker/teams',
+          icon: 'icon-puzzle',
+        },
+      ]
+    },
+    {
       title: true,
       name: 'Theme',
       wrapper: {            // optional wrapper object
@@ -124,7 +136,7 @@ export default {
       ],
     },
     {
-      name: 'Buttons',
+      name: 'Buttonss',
       url: '/buttons',
       icon: 'icon-cursor',
       children: [
