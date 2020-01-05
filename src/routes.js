@@ -38,6 +38,7 @@ const User = React.lazy(() => import('./views/Users/User'));
 
 // Team Tasker Pages
 const Teams = React.lazy(() => import('./teamtasker/teams'));
+const AddTeam = React.lazy(() => import('./teamtasker/add-team'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -83,7 +84,8 @@ const routes = [
   { path: '/users', exact: true,  name: 'Users', component: Users },
   { path: '/users/:id', exact: true, name: 'User Details', component: User },
 
-  { path: '/teamtasker/teams', exact: true, name: 'All Teams', component: Teams },
+  { path: '/teams', exact: true, name: 'All Teams', component: Teams },
+  { path: '/add-team', exact: true, name: 'New Team', component: AddTeam },
 
 ];
 

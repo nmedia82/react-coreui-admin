@@ -16,7 +16,12 @@ export default {
       children: [
         {
           name: 'All Teams',
-          url: '/teamtasker/teams',
+          url: '/teams',
+          icon: 'icon-puzzle',
+        },
+        {
+          name: 'Add New Team',
+          url: 'add-team',
           icon: 'icon-puzzle',
         },
       ]
