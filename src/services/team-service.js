@@ -1,20 +1,19 @@
-import http from './httpServicejQuery';
+import http from "./httpServicejQuery";
 
 export default {
+  getTeams: async function() {
+    return await http.get(http.server + "/teams");
+  },
 
-    getTeams: async function() {
+  addTeam: async function(team) {
+    return await http.post(http.server + "/teams", team);
+  },
 
-        return await http.get(http.server+"/teams");
-    },
+  deleteTeam: async function(id) {
+    return await http.post(http.server + "/teams/" + id);
+  },
 
-    addTeam: async function (team) {
-
-        return await http.post(http.server+"/teams", team);
-    },
-
-    deleteTeam: async function (id) {
-        return await http.post(http.server+"/teams/"+id);
-    },
-    
-
-}
+  updateTeam: async function(team) {
+    return await http.post(http.server + "/update/teams/" + team.id, team);
+  }
+};

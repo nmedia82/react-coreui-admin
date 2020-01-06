@@ -1,113 +1,131 @@
-import React, { Component } from 'react'
-import teamService from '../services/team-service';
-import AddTeam from './add-team';
-// import AddTeam2 from './add-team2';
-import { toast } from 'react-toastify';
-import SweetAlert from 'react-bootstrap-sweetalert';
-import TeamList from './team-list';
-
+import React, { Component } from "react";
+import teamService from "../services/team-service";
+import AddTeam from "./add-team";
+import { toast } from "react-toastify";
+import SweetAlert from "react-bootstrap-sweetalert";
+import TeamList from "./team-list";
 
 export default class Teams extends Component {
-    
+  state = {
+    teams: [], // contains all teams
+    showAlert: null, // show sweetalert notification
+    currentTeam: { name: "" }, // hold current team for update
+    dbSchema: { name: "" }, // fillable DB fields for resetting
+    isEditing: false // Update mode
+  };
 
-    state = {
-        teams:[],
-        showAlert: null,
-        currentTeam: {name: ''},
-        isEditing: false,
+  async componentDidMount() {
+    const teams = await teamService.getTeams();
+    this.setState({ teams });
+  }
+
+  handleAddNewTeam = async data => {
+    const team = await teamService.addTeam(data);
+
+    if (team) {
+      toast.info("Added successfully: " + team.name);
     }
+    const teams = [team, ...this.state.teams];
+    this.resetForm();
+    this.setState({ teams });
+  };
 
-    async componentDidMount() {
+  handleUpdateTeam = async team => {
+    const response = await teamService.updateTeam(team);
 
-        const teams = await teamService.getTeams();
-        this.setState({teams});
-    }
+    if (!response) return toast.error("Error while updating ... try again");
+    // Need to get exact item from array
+    const teamDB = this.state.teams.find(t => t.id === team.id);
+    const teams = [...this.state.teams];
+    // Now getting the index using above item found
+    const index = teams.indexOf(teamDB);
+    teams[index] = { ...team };
+    this.setState({ teams });
+    this.resetForm();
+    toast.success("Team updated successfully !!");
+  };
 
-    handleAddNewTeam = async (data) => {
-        const team = await teamService.addTeam( data );
-
-        if( team ) {
-            toast.info("Added successfully: " + team.name);
-        }
-
-        const teams = [team, ...this.state.teams];
-        this.setState( { teams} );
-    }
-
-    confirmDelete = (team) => {
-      const getAlert = () => (
-        <SweetAlert 
+  confirmDelete = team => {
+    const getAlert = () => (
+      <SweetAlert
         warning
         showCancel
         confirmBtnText="Yes, delete it!"
         confirmBtnBsStyle="danger"
         title="Are you sure?"
         onConfirm={() => this.handleDelete(team)}
-        onCancel={() => this.setState({showAlert:null})}
+        onCancel={() => this.setState({ showAlert: null })}
         focusCancelBtn
-        >
-          Are you sure?
-        </SweetAlert>
-      );
+      >
+        Are you sure?
+      </SweetAlert>
+    );
 
-      this.setState({
-        showAlert: getAlert()
-      });
+    this.setState({
+      showAlert: getAlert()
+    });
+  };
+
+  handleDelete = async team => {
+    const orgTeams = this.state.teams;
+    const teams = this.state.teams.filter(t => t.id !== team.id);
+    const showAlert = null;
+    this.setState({ teams, showAlert });
+
+    try {
+      await teamService.deleteTeam(team.id);
+      toast.success("Team Remove Successfully: " + team.name);
+    } catch (err) {
+      toast.error("Some error occurred while deleting data");
+      this.setState({ teams: orgTeams });
     }
+  };
 
-    handleDelete = async (team) => {
-        const orgTeams = this.state.teams;
-        const teams = this.state.teams.filter( t => t.id !== team.id );
-        const showAlert = null;
-        this.setState({teams, showAlert});
+  handleSelect = function(currentTeam) {
+    this.startEditing();
+    this.setState({ currentTeam });
+  };
 
-        try {
-            await teamService.deleteTeam(team.id);
-            toast.success("Team Remove Successfully: "+team.name);   
-        } catch (err) {
-            toast.error("Some error occurred while deleting data");
-            this.setState({teams: orgTeams});
-        }
-        
-    }
+  startEditing = function() {
+    const isEditing = true;
+    this.setState({ isEditing });
+  };
 
-    handleSelect = function (currentTeam) {
-      this.startEditing();
-      this.setState({currentTeam});
-    }
+  resetForm = () => {
+    const currentTeam = { ...this.state.dbSchema };
+    const isEditing = false;
+    this.setState({ currentTeam, isEditing });
+  };
 
-    startEditing = function(){
-      const isEditing = true;
-      this.setState({isEditing});
-    }
+  handleFormChange = input => {
+    const currentTeam = { ...this.state.currentTeam };
+    const key = input["id"];
+    currentTeam[key] = input.value;
 
-    endEditing = () => {
-      const currentTeam = {name: ''};
-      const isEditing = false;
-      this.setState({currentTeam, isEditing});
-    }
+    this.setState({ currentTeam });
+  };
 
+  render() {
+    const { teams, currentTeam, isEditing } = this.state;
+    return (
+      <div className="animated fadeIn">
+        {this.state.showAlert}
 
-    render() {
+        <AddTeam
+          onAddNewTeam={this.handleAddNewTeam}
+          onUpdateTeam={this.handleUpdateTeam}
+          onCancelEditing={this.resetForm}
+          onNameChange={this.handleFormChange}
+          team={currentTeam}
+          isEditing={isEditing}
+        />
 
-        const {teams, currentTeam, isEditing} = this.state;
-        return (
-            <div className="animated fadeIn">
-            
-            {this.state.showAlert}
-
-            <AddTeam
-            onAddNewTeam={this.handleAddNewTeam} 
-            onCancelEditing={this.endEditing}
-            team={currentTeam}
-            isEditing={isEditing}
-            />
-                
-            <TeamList teams={teams}
-            onConfirmDelete={(team) => this.confirmDelete(team)}
-            onSelect={(team) => this.handleSelect(team)}
-            />
-            </div>
-        )
-    }
+        <TeamList
+          teams={teams}
+          onConfirmDelete={team => this.confirmDelete(team)}
+          onSelect={team => this.handleSelect(team)}
+        />
+      </div>
+    );
+  }
 }
