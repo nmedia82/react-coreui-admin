@@ -1,6 +1,10 @@
 import http from "./httpServicejQuery";
 
 export default {
+  getCategories: async function() {
+    return await http.get(http.server + "/team_categories");
+  },
+
   getTeams: async function() {
     return await http.get(http.server + "/teams");
   },

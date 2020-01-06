@@ -8,15 +8,17 @@ import TeamList from "./team-list";
 export default class Teams extends Component {
   state = {
     teams: [], // contains all teams
+    categories: [],
     showAlert: null, // show sweetalert notification
     currentTeam: { name: "" }, // hold current team for update
-    dbSchema: { name: "" }, // fillable DB fields for resetting
+    dbSchema: { name: "", category_id: "" }, // fillable DB fields for resetting
     isEditing: false // Update mode
   };
 
   async componentDidMount() {
     const teams = await teamService.getTeams();
-    this.setState({ teams });
+    const categories = await teamService.getCategories();
+    this.setState({ teams, categories });
   }
 
   handleAddNewTeam = async data => {
@@ -82,6 +84,7 @@ export default class Teams extends Component {
   };
 
   handleSelect = function(currentTeam) {
+    // console.log("Selected", currentTeam);
     this.startEditing();
     this.setState({ currentTeam });
   };
@@ -99,14 +102,15 @@ export default class Teams extends Component {
 
   handleFormChange = input => {
     const currentTeam = { ...this.state.currentTeam };
-    const key = input["id"];
+    const key = input["name"];
     currentTeam[key] = input.value;
+    console.log("currentTeam", currentTeam);
 
     this.setState({ currentTeam });
   };
 
   render() {
-    const { teams, currentTeam, isEditing } = this.state;
+    const { teams, currentTeam, isEditing, categories } = this.state;
     return (
       <div className="animated fadeIn">
         {this.state.showAlert}
@@ -116,12 +120,14 @@ export default class Teams extends Component {
           onUpdateTeam={this.handleUpdateTeam}
           onCancelEditing={this.resetForm}
           onNameChange={this.handleFormChange}
+          categories={categories}
           team={currentTeam}
           isEditing={isEditing}
         />
 
         <TeamList
           teams={teams}
+          categories={categories}
           onConfirmDelete={team => this.confirmDelete(team)}
           onSelect={team => this.handleSelect(team)}
         />

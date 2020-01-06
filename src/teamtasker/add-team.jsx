@@ -1,11 +1,11 @@
 import React from "react";
 import {
-  Badge,
+  Col,
   Button,
   Card,
   CardBody,
   CardHeader,
-  Form,
+  Label,
   FormGroup,
   Input,
   InputGroup,
@@ -19,6 +19,7 @@ export default function AddNewTeam(props) {
     onUpdateTeam,
     onCancelEditing,
     onNameChange,
+    categories,
     team,
     isEditing
   } = props;
@@ -46,6 +47,28 @@ export default function AddNewTeam(props) {
               autoComplete=""
             />
           </InputGroup>
+        </FormGroup>
+        <FormGroup row>
+          <Col md="3">
+            <Label htmlFor="category_id">Team Category</Label>
+          </Col>
+          <Col xs="12" md="9" size="">
+            <Input
+              value={team.category_id}
+              onChange={e => onNameChange(e.target)}
+              type="select"
+              name="category_id"
+              id="category_id"
+              bsSize=""
+            >
+              <option value="0">Please select</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </Input>
+          </Col>
         </FormGroup>
         <FormGroup className="form-actions">
           <Button
