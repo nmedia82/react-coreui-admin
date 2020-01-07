@@ -37,7 +37,7 @@ class Login extends Component {
       //   await auth.login(email, password);
       const { data: user } = await registerService.login(this.state.login);
       auth.login(user);
-      //   this.props.history.push("/");
+      this.props.history.push("/");
     } catch (err) {
       console.log(err);
       const { status, responseJSON, responseText } = err;
@@ -67,6 +67,7 @@ class Login extends Component {
                     <Form>
                       <h1>Login</h1>
                       <p className="text-muted">Sign In to your account</p>
+                      <Link to="/">Home</Link>
                       <InputGroup className="mb-3">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>
