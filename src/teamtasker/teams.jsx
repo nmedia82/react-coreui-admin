@@ -16,8 +16,8 @@ export default class Teams extends Component {
   };
 
   async componentDidMount() {
-    const teams = await teamService.getTeams();
-    const categories = await teamService.getCategories();
+    const { data: teams } = await teamService.getTeams();
+    const { data: categories } = await teamService.getCategories();
     this.setState({ teams, categories });
   }
 

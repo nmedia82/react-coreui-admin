@@ -20,6 +20,11 @@ export default {
           icon: "icon-puzzle"
         },
         {
+          name: "Login",
+          url: "login",
+          icon: "icon-puzzle"
+        },
+        {
           name: "Register User",
           url: "register",
           icon: "icon-puzzle"

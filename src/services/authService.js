@@ -1,42 +1,39 @@
-import jwtDecode from "jwt-decode";
+// import jwtDecode from "jwt-decode";
 import http from "./httpService";
-import { apiUrl } from "../config.json";
+import { toast } from "react-toastify";
 
-const apiEndpoint = apiUrl + "/auth";
-const tokenKey = "token";
+const apiEndpoint = http.server + "/login";
+const tokenKey = "user_token";
+const userKey = "current_user";
 
-http.setJwt(getJwt());
+http.setToken(getToken());
 
-export async function login(email, password) {
-  const { data: jwt } = await http.post(apiEndpoint, { email, password });
-  localStorage.setItem(tokenKey, jwt);
+export async function login(user) {
+  console.log(user);
+  localStorage.setItem(tokenKey, user.data.api_token);
+  localStorage.setItem(userKey, JSON.stringify(user.data));
 }
 
-export function loginWithJwt(jwt) {
-  localStorage.setItem(tokenKey, jwt);
-}
+// export function loginWithJwt(jwt) {
+//   localStorage.setItem(tokenKey, jwt);
+// }
 
 export function logout() {
   localStorage.removeItem(tokenKey);
+  localStorage.removeItem(userKey);
 }
 
 export function getCurrentUser() {
-  try {
-    const jwt = localStorage.getItem(tokenKey);
-    return jwtDecode(jwt);
-  } catch (ex) {
-    return null;
-  }
+  return JSON.parse(localStorage.getItem(userKey));
 }
 
-export function getJwt() {
+export function getToken() {
   return localStorage.getItem(tokenKey);
 }
 
 export default {
   login,
-  loginWithJwt,
   logout,
   getCurrentUser,
-  getJwt
+  getToken
 };

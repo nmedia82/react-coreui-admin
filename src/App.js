@@ -13,7 +13,7 @@ const loading = () => (
 const DefaultLayout = React.lazy(() => import("./containers/DefaultLayout"));
 
 // Pages
-const Login = React.lazy(() => import("./views/Pages/Login"));
+const Login = React.lazy(() => import("./teamtasker/login"));
 const Register = React.lazy(() => import("./teamtasker/register"));
 const Page404 = React.lazy(() => import("./views/Pages/Page404"));
 const Page500 = React.lazy(() => import("./views/Pages/Page500"));

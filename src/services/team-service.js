@@ -1,4 +1,7 @@
-import http from "./httpServicejQuery";
+import http from "./httpService";
+import auth from "./authService";
+
+http.setToken(auth.getToken());
 
 export default {
   getCategories: async function() {
@@ -13,11 +16,11 @@ export default {
     return await http.post(http.server + "/teams", team);
   },
 
-  deleteTeam: async function(id) {
-    return await http.post(http.server + "/teams/" + id);
+  updateTeam: async function(team) {
+    return await http.put(http.server + "/teams/" + team.id, team);
   },
 
-  updateTeam: async function(team) {
-    return await http.post(http.server + "/update/teams/" + team.id, team);
+  deleteTeam: async function(id) {
+    return await http.delete(http.server + "/teams/" + id);
   }
 };
