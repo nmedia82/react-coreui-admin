@@ -30,6 +30,7 @@ axios.interceptors.response.use(null, error => {
 });
 
 function setToken(api_token) {
+  console.log("Setting Token", api_token);
   axios.defaults.headers.common["Authorization"] = "Bearer " + api_token;
 }
 

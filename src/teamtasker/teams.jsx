@@ -22,8 +22,8 @@ export default class Teams extends Component {
   }
 
   handleAddNewTeam = async data => {
-    const team = await teamService.addTeam(data);
-
+    const {data: team} = await teamService.addTeam(data);
+    
     if (team) {
       toast.info("Added successfully: " + team.name);
     }
